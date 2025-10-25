@@ -77,7 +77,9 @@ const DashboardPage = () => {
       } else {
         await createExpense(expenseData);
       }
-      // fetchData(pagination.page);
+
+      await fetchData(); // updated data from backend
+
       setIsModalOpen(false);
     } catch (err) {
       setError(err.message);
