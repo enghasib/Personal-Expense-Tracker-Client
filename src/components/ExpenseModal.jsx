@@ -6,6 +6,7 @@ const ExpenseModal = ({ expense, onClose, onSave }) => {
     amount: "",
     category: "",
     type: "EXPENSE",
+    note: "",
   });
 
   useEffect(() => {
@@ -15,6 +16,7 @@ const ExpenseModal = ({ expense, onClose, onSave }) => {
         amount: expense.amount,
         category: expense.category,
         type: expense.type,
+        note: expense.note,
       });
     } else {
       setFormData({
@@ -22,6 +24,7 @@ const ExpenseModal = ({ expense, onClose, onSave }) => {
         amount: "",
         category: "",
         type: "EXPENSE",
+        note: "",
       });
     }
   }, [expense]);
@@ -39,10 +42,17 @@ const ExpenseModal = ({ expense, onClose, onSave }) => {
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
       <div className="w-full max-w-md p-8 space-y-6 bg-white rounded-lg shadow-md">
-        <h2 className="text-2xl font-bold text-center">{expense ? "Edit Expense" : "Add Expense"}</h2>
+        <h2 className="text-2xl font-bold text-center">
+          {expense ? "Edit Expense" : "Add Expense"}
+        </h2>
         <form onSubmit={handleSubmit} className="space-y-6">
           <div>
-            <label htmlFor="title" className="block mb-2 text-sm font-medium text-gray-900">Title</label>
+            <label
+              htmlFor="title"
+              className="block mb-2 text-sm font-medium text-gray-900"
+            >
+              Title
+            </label>
             <input
               type="text"
               name="title"
@@ -54,7 +64,12 @@ const ExpenseModal = ({ expense, onClose, onSave }) => {
             />
           </div>
           <div>
-            <label htmlFor="amount" className="block mb-2 text-sm font-medium text-gray-900">Amount</label>
+            <label
+              htmlFor="amount"
+              className="block mb-2 text-sm font-medium text-gray-900"
+            >
+              Amount
+            </label>
             <input
               type="number"
               name="amount"
@@ -66,7 +81,12 @@ const ExpenseModal = ({ expense, onClose, onSave }) => {
             />
           </div>
           <div>
-            <label htmlFor="category" className="block mb-2 text-sm font-medium text-gray-900">Category</label>
+            <label
+              htmlFor="category"
+              className="block mb-2 text-sm font-medium text-gray-900"
+            >
+              Category
+            </label>
             <input
               type="text"
               name="category"
@@ -78,7 +98,28 @@ const ExpenseModal = ({ expense, onClose, onSave }) => {
             />
           </div>
           <div>
-            <label htmlFor="type" className="block mb-2 text-sm font-medium text-gray-900">Type</label>
+            <label
+              htmlFor="note"
+              className="block mb-2 text-sm font-medium text-gray-900"
+            >
+              Notes
+            </label>
+            <textarea
+              type="textarea"
+              name="note"
+              id="note"
+              value={formData.note}
+              onChange={handleChange}
+              className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-indigo-500 focus:border-indigo-500 block w-full p-2.5"
+            />
+          </div>
+          <div>
+            <label
+              htmlFor="type"
+              className="block mb-2 text-sm font-medium text-gray-900"
+            >
+              Type
+            </label>
             <select
               name="type"
               id="type"

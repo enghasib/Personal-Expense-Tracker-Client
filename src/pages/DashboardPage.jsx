@@ -16,15 +16,22 @@ const DashboardPage = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedExpense, setSelectedExpense] = useState(null);
   const [filters, setFilters] = useState({ type: "", category: "" });
+  // const [pagination, setPagination] = useState({
+  //   page: 1,
+  //   limit: 10,
+  //   totalPage: 1,
+  //   totalItems: 0,
+  // });
   const navigate = useNavigate();
 
-  const fetchData = async () => {
+  const fetchData = async (page = 1) => {
     try {
       const summaryData = await getExpenseSummary();
       setSummary(summaryData);
 
-      const expensesData = await getExpenses(filters);
+      const expensesData = await getExpenses({ ...filters, page });
       setExpenses(expensesData.list_of_expenses);
+      // setPagination(expensesData.pagination);
     } catch (err) {
       setError(err.message);
       if (err.message.includes("401")) {
@@ -70,7 +77,7 @@ const DashboardPage = () => {
       } else {
         await createExpense(expenseData);
       }
-      fetchData();
+      // fetchData(pagination.page);
       setIsModalOpen(false);
     } catch (err) {
       setError(err.message);
@@ -81,6 +88,10 @@ const DashboardPage = () => {
     const { name, value } = e.target;
     setFilters((prev) => ({ ...prev, [name]: value }));
   };
+
+  // const handlePageChange = (newPage) => {
+  //   setPagination((prev) => ({ ...prev, page: newPage }));
+  // };
 
   return (
     <div className="min-h-screen bg-gray-100">
@@ -140,7 +151,7 @@ const DashboardPage = () => {
                   : "tex bg-red-500 text-white"
               } grid grid-cols rounded-xl p-2 text-center text-2xl mb-2`}
             >
-              Status: {summary.balanceStatus}
+              Account Status: {summary.balanceStatus}
             </div>
           </>
         )}
@@ -191,6 +202,9 @@ const DashboardPage = () => {
                     Category
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">
+                    Notes
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">
                     Type
                   </th>
                   <th className="px-6 py-3 text-right text-xs font-medium uppercase tracking-wider">
@@ -202,9 +216,7 @@ const DashboardPage = () => {
                 {expenses.map((expense) => (
                   <tr
                     className={`${
-                      expense.type === "EXPENSE" && expense.amount > 5000
-                        ? "bg-red-300"
-                        : "bg-amber-50"
+                      expense.is_large ? "bg-red-300" : "bg-white-500"
                     }`}
                     key={expense.id}
                   >
@@ -216,6 +228,9 @@ const DashboardPage = () => {
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                       {expense.category}
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                      {expense.note ? expense.note : "No notes"}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm">
                       <span
@@ -247,6 +262,26 @@ const DashboardPage = () => {
               </tbody>
             </table>
           </div>
+
+          {/* <div className="flex justify-between items-center mt-4">
+            <button
+              onClick={() => handlePageChange(pagination.page - 1)}
+              disabled={pagination.page === 1}
+              className="px-4 py-2 font-medium text-white bg-indigo-600 rounded-md hover:bg-indigo-700 disabled:bg-gray-400"
+            >
+              Previous
+            </button>
+            <span>
+              Page {pagination.page} of {pagination.totalPage}
+            </span>
+            <button
+              onClick={() => handlePageChange(pagination.page + 1)}
+              disabled={pagination.page === pagination.totalPage}
+              className="px-4 py-2 font-medium text-white bg-indigo-600 rounded-md hover:bg-indigo-700 disabled:bg-gray-400"
+            >
+              Next
+            </button>
+          </div> */}
         </div>
       </main>
 
